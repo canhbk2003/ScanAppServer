@@ -11,7 +11,8 @@ def detect():
 	# convert data to string (decode base64)
 	data = base64.b64decode(r.data)
 	nparr = np.fromstring(data, np.uint8)
-	root = cv.imread(nparr, cv.IMREAD_COLOR)
+	b,g,r = nparr
+	root = dstack([r,g,b])
 
 	img = cv.cvtColor(root, cv.COLOR_BGR2GRAY)
 	blur = cv.GaussianBlur(img, (3,3), 0)
