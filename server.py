@@ -15,7 +15,7 @@ def detect():
 
 	img = cv.cvtColor(root, cv.COLOR_BGR2GRAY)
 	blur = cv.GaussianBlur(img, (3,3), 0)
-	ret3, threshold3 = cv.threshold(blur, 0,255,THRESH_BINARY_INV+cv.THRESH_OTSU)
+	ret3, threshold3 = cv.threshold(blur, 0,255,cv.THRESH_BINARY_INV+cv.THRESH_OTSU)
 	contours, hierachy = cv.findContours(threshold3, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 	c = max(contours, key=cv.contourArea)
 
@@ -28,10 +28,10 @@ def detect():
 
 	ret = cv.cvtColor(result, cv.COLOR_RGBA2BGRA)
 
-	# return for client
-	response_data = {'message': 'image received. size={}x{}'.format(ret.shape[1], ret.shape[0])}
+	im_bytes = ret.tobytes()
+	im_b64 = base64.b64encode(im_bytes)
 
-	ret_data = base64.b64encode(response_data)
+	ret_data = base64.b64encode(im_b64)
 	print(ret_data)
 	return Response(response=ret_data, status=200, mimetype='application/text')
 
