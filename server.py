@@ -8,6 +8,8 @@ app = Flask(__name__)
 @app.route('/detect', methods=['POST'])
 def detect():
 	data = request.data
+	print(data)
+	print(typeof(data))
 	nparr = np.fromstring(base64.b64decode(data), np.uint8)
 	root = cv.imdecode(nparr, cv.IMREAD_COLOR)
 
