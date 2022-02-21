@@ -26,8 +26,8 @@ def detect():
 	result = cv.bitwise_and(root2, mask)
 
 	ret = cv.cvtColor(result, cv.COLOR_RGBA2BGRA)
-
-	im_bytes = ret.tobytes()
+	_, im_arr = cv.imencode('.jpg', ret)
+	im_bytes = im_arr.tobytes()
 	im_b64 = base64.b64encode(im_bytes)
 	print(im_b64)
 	return Response(response=im_b64, status=200, mimetype='application/text')
