@@ -9,15 +9,14 @@ app = Flask(__name__)
 def detect():
 	r = request
 	# convert data to string (decode base64)
-	data = base64.b64decode(r.data)
-	nparr = np.fromstring(data, np.uint8)
-	b,g,r = nparr
-	root = dstack([r,g,b])
+	_data = r.data
+	nparr = np.fromstring(base64.b64decode(_data), np.uint8)
+	root = cv.imdecode(nparr, cv.IMREAD_COLOR)
 
 	img = cv.cvtColor(root, cv.COLOR_BGR2GRAY)
 	blur = cv.GaussianBlur(img, (3,3), 0)
 	ret3, theshold3 = cv.threshold(blur, 0,255,THRESH_BINARY_INV+cv.THRESH_OTSU)
-	contours, hierachy = cv.findContours(threshold3, cv_RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	contours, hierachy = cv.findContours(threshold3, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 	c = max(contours, key=cv.contourArea)
 
 	mask = cv.cvtColor(root, cv.COLOR_BGR2RGBA)
