@@ -32,8 +32,8 @@ def detect():
 	response_data = {'message': 'image received. size={}x{}'.format(ret.shape[1], ret.shape[0])}
 
 	ret_data = base64.b64encode(response_data)
-
-	return Response(response=ret_data, status=200, mimetype='application/json')
+	print(ret_data)
+	return Response(response=ret_data, status=200, mimetype='application/text')
 
 app.run(host="127.0.0.1", port=8000)
 
