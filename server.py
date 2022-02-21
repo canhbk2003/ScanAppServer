@@ -9,7 +9,6 @@ app = Flask(__name__)
 def detect():
 	data = request.data
 	print(data)
-	print(typeof(data))
 	nparr = np.fromstring(base64.b64decode(data), np.uint8)
 	root = cv.imdecode(nparr, cv.IMREAD_COLOR)
 
@@ -30,12 +29,10 @@ def detect():
 
 	im_bytes = ret.tobytes()
 	im_b64 = base64.b64encode(im_bytes)
+	print(im_b64)
+	return Response(response=im_b64, status=200, mimetype='application/text')
 
-	ret_data = base64.b64encode(im_b64)
-	print(ret_data)
-	return Response(response=ret_data, status=200, mimetype='application/text')
-
-app.run(host="127.0.0.1", port=8000)
+app.run(host="0.0.0.0", port=80)
 
 
 
