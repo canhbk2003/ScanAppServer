@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>AMG Administrator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+      h1{
+        color: #F39C12;
+        text-align: center;
+      }
+    </style>
+
+  </head>
+  <body>
+    <h1>WELCOME TO AMG ADMINISTRATOR</h1>
+    <div class="container">
+      <form name="generate-password" method="post">
+        <input type="text">
+        <input class="btn btn-default" type="button" value="Generate password">
+      </form>
+    </div>
+    <div class="container">
+      <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">User name</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Date login</th>
+                    <th scope="col">Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if data %}
+                    {% for dat in data %}
+                        <tr>
+                            <th scope="row">
+                                {{ dat }}
+                            </th>
+                            <td>
+                                {{ dat.productId }}
+                            </td>
+                            <td>
+                                {{ at.name }}
+                            </td>
+                            <td>
+                                {{ dat.description }}
+                            </td>
+                            <td>
+                                <a href="/editproduct/<%=data[i]._id %>" class="btn btn-primary">Edit</a>
+                                <a style="margin-top: 5px;" href="" class="btn btn-danger" data-toggle="modal" data-id="<%=data[i]._id %>" data-target="#modal-delete-model">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+  </body>
+</html>

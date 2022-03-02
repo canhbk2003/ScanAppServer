@@ -1,9 +1,13 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template, redirect, url_for
 import numpy as np
 import cv2 as cv
 import base64
+from flask_pymongo import PyMongo
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = "/assets", static_folder="assets")
+url = 'mongodb://127.0.0.1:27017/amgadmin'
+app.config["MONGO_URI"] = url
+mongo = PyMongo(app)
 
 @app.route('/detect', methods=['POST'])
 def detect():
@@ -35,7 +39,18 @@ def detect():
 	except:
 		return Response(response='', status=500, mimetype='application/text')
 
-app.run(host="0.0.0.0", port=80)
+@app.route('/login', methods=['GET, POST'])
+def login():
+	error = None
+	if request.method == 'POST':
+		if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('admin'))
+
+    return render_template('login.html', error=error)
+
+app.run(host="127.0.0.1", port=8000)
 
 
 
