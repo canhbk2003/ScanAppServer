@@ -21,7 +21,7 @@
       <h1>WELCOME TO AMG LOGIN</h1>
       <img src="/assets/logoamg.jpg" alt="Amg school logo" width="100" height="100">
       <br>
-      <form action="" method="post">
+      <form action="/login" method="POST">
         <input type="text" placeholder="Username" name="username" value="{{
           request.form.username }}">
          <input type="password" placeholder="Password" name="password" value="{{
@@ -29,7 +29,7 @@
         <input class="btn btn-default" type="submit" value="Login">
       </form>
       {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
+        <p class="error" style="color: red;"><strong>Error:</strong> {{ error }}
       {% endif %}
     </div>
   </body>

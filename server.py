@@ -1,13 +1,21 @@
-from flask import Flask, request, Response, render_template, redirect, url_for
+from crypt import methods
+from tkinter.messagebox import NO
+from flask import Flask, request, Response, render_template, redirect, url_for, session
 import numpy as np
 import cv2 as cv
 import base64
 from flask_pymongo import PyMongo
+import flask
+import json
+from bson.json_util import dumps, loads
+import urllib
+from urllib.parse import unquote
 
 app = Flask(__name__, static_url_path = "/assets", static_folder="assets")
 url = 'mongodb://127.0.0.1:27017/amgadmin'
 app.config["MONGO_URI"] = url
-mongo = PyMongo(app)
+mongodb_client = PyMongo(app)
+db = mongodb_client.db
 
 @app.route('/detect', methods=['POST'])
 def detect():
@@ -39,16 +47,41 @@ def detect():
 	except:
 		return Response(response='', status=500, mimetype='application/text')
 
-@app.route('/login', methods=['GET, POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
-	if request.method == 'POST':
-		if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            return redirect(url_for('admin'))
+	data = None
+	if request.method == 'GET':
+		return render_template('login.html')
+	elif request.method == 'POST':
+		# check data
+		if request.form["username"] == '' or request.form["password"] == '':
+			error = 'Invalid user or password, please check again!'
+			return render_template('login.html', error=error)
+	# connect and verify data with database
+	data = db.admin.find_one({"username": request.form["username"], "password": request.form["password"]}, max_time_ms=1000)
+	if not data:
+		error = 'Invalid user or password, please check again!'
+		return render_template('login.html', error=error)
+	print(data["username"])
+	print(data["password"])
+	if data["role"] == "admin":
+		members = db.admin.find({"role":{"$eq":"member"}})
+		list_cursor = list(members)
+		parsing_data = dumps(list_cursor, indent = 2)
+		print(parsing_data)
+		return redirect(url_for('admin', data=parsing_data))
+	else:
+		return "ok"
 
-    return render_template('login.html', error=error)
+@app.route('/admin', methods=['GET'])
+def admin():
+	error = None
+	# get data in form request body
+	data = flask.request.args.get("data")
+	data_decoded = unquote(data)
+	decoded_data = json.loads(data_decoded)
+	return render_template('admin.html', data=decoded_data)
 
 app.run(host="127.0.0.1", port=8000)
 

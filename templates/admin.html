@@ -17,7 +17,7 @@
 
   </head>
   <body>
-    <h1>WELCOME TO AMG ADMINISTRATOR</h1>
+    <h1>WELCOME TO AMG ADMINISTRATION</h1>
     <div class="container">
       <form name="generate-password" method="post">
         <input type="text">
@@ -28,36 +28,35 @@
       <table class="table table-bordered">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">No.</th>
                     <th scope="col">User name</th>
                     <th scope="col">Password</th>
+                    <th scope="col">Role</th>
                     <th scope="col">Date login</th>
                     <th scope="col">Manage</th>
                 </tr>
             </thead>
             <tbody>
-                {% if data %}
-                    {% for dat in data %}
-                        <tr>
-                            <th scope="row">
-                                {{ dat }}
-                            </th>
-                            <td>
-                                {{ dat.productId }}
-                            </td>
-                            <td>
-                                {{ at.name }}
-                            </td>
-                            <td>
-                                {{ dat.description }}
-                            </td>
-                            <td>
-                                <a href="/editproduct/<%=data[i]._id %>" class="btn btn-primary">Edit</a>
-                                <a style="margin-top: 5px;" href="" class="btn btn-danger" data-toggle="modal" data-id="<%=data[i]._id %>" data-target="#modal-delete-model">Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                {% set x = i %}
+                {% for item in data %}
+                    <tr>
+                        <td>
+                            {{ item.username }}
+                        </td>
+                        <td>
+                            {{ item.password }}
+                        </td>
+                        <td>
+                            {{ item.role }}
+                        </td>
+                        <td>
+                            {{ item.datelog }}
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-primary">Edit</a>
+                            <a style="margin-top: 5px;" href="" class="btn btn-danger" data-toggle="modal" data-id="#" data-target="#modal-delete-model">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
