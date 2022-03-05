@@ -49,8 +49,8 @@ def detect():
 @app.route('/mobilelogin', methods=['POST'])
 def mobilelogin():
 	error = "ok"
-	data = request.data
-	data = data.decode("utf-8")
+	_data = request.data
+	data = _data.decode("utf-8")
 	if data == '':
 		error = "error"
 	print(data)
@@ -98,7 +98,7 @@ def admin():
 	decoded_data = json.loads(data_decoded)
 	return render_template('admin.html', data=decoded_data)
 
-app.run(host="127.0.0.1", port=8000)
+app.run(host="0.0.0.0", port=80)
 
 
 
