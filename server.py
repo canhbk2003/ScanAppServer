@@ -20,7 +20,6 @@ db = mongodb_client.db
 def detect():
 	try:
 		data = request.data
-		print(data)
 		nparr = np.fromstring(base64.b64decode(data), np.uint8)
 		root = cv.imdecode(nparr, cv.IMREAD_COLOR)
 
@@ -41,7 +40,6 @@ def detect():
 		_, im_arr = cv.imencode('.png', ret)
 		im_bytes = im_arr.tobytes()
 		im_b64 = base64.b64encode(im_bytes)
-		print(im_b64)
 		return Response(response=im_b64, status=200, mimetype='application/text')
 	except:
 		return Response(response='', status=500, mimetype='application/text')
@@ -53,7 +51,6 @@ def mobilelogin():
 	data = _data.decode("utf-8")
 	if data == '':
 		error = "error"
-	print(data)
 	splitStr = data.split('+')
 	if len(splitStr) != 2:
 		error = "error"
@@ -80,16 +77,13 @@ def login():
 	if not data:
 		error = 'Invalid user or password, please check again!'
 		return render_template('login.html', error=error)
-	print(data["username"])
-	print(data["password"])
 	if data["role"] == "admin":
 		members = db.dmin.find({"role":{"$eq":"member"}})
 		list_cursor = list(members)
 		parsing_data = dumps(list_cursor, indent = 2)
-		print(parsing_data)
 		return redirect(url_for('admin', data=parsing_data))
 	else:
-		error = "You art not admin!"
+		error = "You are not admin!"
 		return render_template('login.html', error=error)
 
 @app.route('/admin', methods=['GET'])
