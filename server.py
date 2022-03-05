@@ -1,5 +1,4 @@
 from crypt import methods
-from tkinter.messagebox import NO
 from flask import Flask, request, Response, render_template, redirect, url_for, session
 import numpy as np
 import cv2 as cv
@@ -51,6 +50,7 @@ def detect():
 def mobilelogin():
 	error = "ok"
 	data = request.data
+	data = data.decode("utf-8")
 	if data == '':
 		error = "error"
 	print(data)
