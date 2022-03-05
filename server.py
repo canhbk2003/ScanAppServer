@@ -9,6 +9,7 @@ import json
 from bson.json_util import dumps, loads
 import urllib
 from urllib.parse import unquote
+from datetime import datetime
 
 app = Flask(__name__, static_url_path = "/assets", static_folder="assets")
 url = 'mongodb://127.0.0.1:27017/amgadmin'
@@ -59,6 +60,10 @@ def mobilelogin():
 	user = db.admin.find_one({"username": username, "password": password}, max_time_ms=1000)
 	if not user:
 		error = "error"
+	_datelog = datetime.now();
+	datelog = _datelog.strftime("%m/%d/%Y, %H:%M:%S")
+	update_query = {"username": user["username"]}
+	db.admin.update_one(update_query, {"$set":{"datelog": datelog}});
 	return Response(response=error, status=200, mimetype='application/text')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -78,7 +83,12 @@ def login():
 		error = 'Invalid user or password, please check again!'
 		return render_template('login.html', error=error)
 	if data["role"] == "admin":
-		members = db.dmin.find({"role":{"$eq":"member"}})
+		_datelog = datetime.now();
+		datelog = _datelog.strftime("%m/%d/%Y, %H:%M:%S")
+		update_query = {"username": data["username"]}
+		db.admin.update_one(update_query, {"$set":{"datelog": datelog}});
+
+		members = db.admin.find({})
 		list_cursor = list(members)
 		parsing_data = dumps(list_cursor, indent = 2)
 		return redirect(url_for('admin', data=parsing_data))
@@ -90,13 +100,32 @@ def login():
 def admin():
 	error = None
 	# get data in form request body
+	error = flask.request.args.get("error")
 	data = flask.request.args.get("data")
+	if not data or len(data) == 0:
+		return redirect(url_for('login'))
 	data_decoded = unquote(data)
 	decoded_data = json.loads(data_decoded)
-	return render_template('admin.html', data=decoded_data)
+	return render_template('admin.html', data=decoded_data, error=error)
+
+@app.route('/updateall', methods=['POST'])
+def updateall():
+	error = None
+	if request.form["genpassword"] == '':
+		error = "Password can not be empty, please check again!"
+		members = db.admin.find({})
+		list_cursor = list(members)
+		parsing_data = dumps(list_cursor, indent = 2)
+		return redirect(url_for('admin', data=parsing_data, error=error))
+
+	password = request.form["genpassword"]
+	# update new user password
+	db.admin.update_many({"role":"member"}, { "$set": {"password": password}})
+	# get all user and update view
+	members = db.admin.find({"role":{"$eq":"member"}})
+	list_cursor = list(members)
+	parsing_data = dumps(list_cursor, indent = 2)
+	return redirect(url_for('admin', data=parsing_data))
 
 app.run(host="0.0.0.0", port=80)
-
-
-
 

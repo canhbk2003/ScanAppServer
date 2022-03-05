@@ -3,7 +3,7 @@
     <title>AMG Administrator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-
+    <link rel="icon" href="/assets/logoamg.jpg">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -19,10 +19,13 @@
   <body>
     <h1>WELCOME TO AMG ADMINISTRATION</h1>
     <div class="container">
-      <form name="generate-password" method="post">
-        <input type="text">
-        <input class="btn btn-default" type="button" value="Generate password">
+      <form action="/updateall" method="POST">
+        <input type="text" name="genpassword" value="{{request.form.genpassword}}">
+        <input class="btn btn-default" type="submit" value="Generate password" id="gen-password">
       </form>
+      {% if error %}
+        <p class="error" style="color: red;"><strong>Error:</strong> {{ error }}
+      {% endif %}
     </div>
     <div class="container">
       <table class="table table-bordered">
@@ -60,5 +63,7 @@
             </tbody>
         </table>
     </div>
+    <script type="text/javascript">
+    </script>
   </body>
 </html>
