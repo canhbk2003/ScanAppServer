@@ -57,8 +57,8 @@ def mobilelogin():
 	splitStr = data.split('+')
 	if len(splitStr) != 2:
 		error = "error"
-	data = db.admin.find_one({"username": request.form["username"], "password": request.form["password"]}, max_time_ms=1000)
-	if not data:
+	user = db.admin.find_one({"username": request.form["username"], "password": request.form["password"]}, max_time_ms=1000)
+	if not user:
 		error = "error"
 	return Response(response=error, status=200, mimetype='application/text')
 
