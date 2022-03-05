@@ -49,9 +49,18 @@ def detect():
 
 @app.route('/mobilelogin', methods=['POST'])
 def mobilelogin():
-	error = None
+	error = "ok"
 	data = request.data
+	if data == '':
+		error = "error"
 	print(data)
+	splitStr = data.split('+')
+	if len(splitStr) != 2:
+		error = "error"
+	data = db.admin.find_one({"username": request.form["username"], "password": request.form["password"]}, max_time_ms=1000)
+	if not data:
+		error = "error"
+	return Response(response=error, status=200, mimetype='application/text')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
