@@ -127,5 +127,5 @@ def updateall():
 	parsing_data = dumps(list_cursor, indent = 2)
 	return redirect(url_for('admin', data=parsing_data))
 
-app.run(host="0.0.0.0", port=80)
+app.run(host="0.0.0.0", port=80, threaded=True)
 
