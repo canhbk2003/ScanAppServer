@@ -47,6 +47,12 @@ def detect():
 	except:
 		return Response(response='', status=500, mimetype='application/text')
 
+@app.route('/mobilelogin', methods=['POST'])
+def mobilelogin():
+	error = None
+	data = request.data
+	print(data)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
@@ -66,7 +72,7 @@ def login():
 	print(data["username"])
 	print(data["password"])
 	if data["role"] == "admin":
-		members = db.admin.find({"role":{"$eq":"member"}})
+		members = db.dmin.find({"role":{"$eq":"member"}})
 		list_cursor = list(members)
 		parsing_data = dumps(list_cursor, indent = 2)
 		print(parsing_data)
