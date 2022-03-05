@@ -89,7 +89,8 @@ def login():
 		print(parsing_data)
 		return redirect(url_for('admin', data=parsing_data))
 	else:
-		return "ok"
+		error = "You art not admin!"
+		return render_template('login.html', error=error)
 
 @app.route('/admin', methods=['GET'])
 def admin():
